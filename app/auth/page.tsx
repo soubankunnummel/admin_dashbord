@@ -1,6 +1,6 @@
 'use client'
 import { Login } from "@/app/service/admin";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {useRouter} from 'next/navigation'
 import {toast} from 'sonner'
@@ -11,10 +11,12 @@ interface userInfo {
     password:string
 }
  
-export default function page() {
+const Page = () => {
   const  router = useRouter()
   const { register, handleSubmit } = useForm <userInfo>();
+  const [isLogin, setIstLogin] = useState(true)
   const onSubmit = async (data:userInfo) => {
+    setIstLogin(false)
     console.log(data);
     await Login(data)
     .then((res:any)=>
@@ -23,8 +25,10 @@ export default function page() {
       if(res.status === 200 ){
         alert("login succes")
         router.push("/")
+        Cookie.set("token",res.data.token)
         Cookie.set("username", res.data.username)
       }else if(res.response.status === 401) {
+
         toast.error(res.response.data.msg)
       }
       console.log(res)
@@ -51,14 +55,20 @@ export default function page() {
             className="w-full h-10 bg-zinc-200  p-4 outline-none"
             {...register("password",{required:true})}
           />
-          <input
+         <div className="flex justify-center ">
+         {isLogin ? <input
             type="submit"
             name=""
             id=""
             className="  w-full h-10  border border-black "
-          />
+          /> :
+          <span className="loading loading-dots loading-md"></span>}
+         </div>
         </form>
       </div>
     </div>
   );
 }
+
+
+export default Page

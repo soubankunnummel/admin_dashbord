@@ -36,24 +36,7 @@ const Drawer = () => {
                 <h4 className="ml-3">EmployeeList</h4>
               </div>
             </Link>
-            {/* <Link onClick={closeDrawer} href={"/admin/about"}>
-              <div className="text-lg font-semibold my-4 pl-3 flex">
-                <InfoIcon />
-                <h4 className="ml-3">About</h4>
-              </div>
-            </Link>
-            <Link onClick={closeDrawer} href={"/admin/gallery"}>
-              <div className="text-lg font-semibold my-4 pl-3 flex">
-                <CollectionsIcon />
-                <h4 className="ml-3">Gallery</h4>
-              </div>
-            </Link>
-            <Link onClick={closeDrawer} href={"/admin/documents"}>
-              <div className="text-lg font-semibold my-4 pl-3 flex">
-                <DescriptionIcon />
-                <h4 className="ml-3">Documents</h4>
-              </div>
-            </Link> */}
+             
           </div>
         </div>
       </div>

@@ -1,7 +1,9 @@
  'use client'
 import { createEmployee } from "@/app/service/employee";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import {toast} from 'sonner'
+import {useRouter} from 'next/navigation'
 
 interface employee {
     name: string;
@@ -11,13 +13,40 @@ interface employee {
 }
 
 export default function Create() {
-  const { register, handleSubmit,formState: { errors } } = useForm();
-  const onSubmit =  async (data) => {
-    await createEmployee(data)
-    .then((res) => console.log(res))
+  const Router = useRouter()
+  const [loading,setLoading] = useState(false)
+  const { register,reset, handleSubmit,formState: { errors } } = useForm();
+
+
+  const onSubmit =  async (data:any) => {
+    const formData = new FormData();
+    
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("phone", data.phone);
+    formData.append("desigination", data.desigination);
+    formData.append("gender", data.gender);
+    formData.append("course", data.coures);
+   
+    formData.append("image", data.image[0]);
+    await createEmployee(formData)
+    .then((res:any) => {
+
+      console.log(res)
+      if(res?.response?.status === 400){
+        toast.error(res.response.data)
+        setLoading(true)
+        reset()
+      }
+      if(res.status === 201){
+          Router.push("/EmployeeList")
+      }
+
+    }
+    )
 
     console.log(data)
-
+ 
   }
   return (
     <div className="w-full my-3 bg-white">
@@ -116,11 +145,15 @@ export default function Create() {
               />
             </div>
           </div>
-          <input
+         <div className="flex justify-center items-center ">
+       {!loading ?   <input
             type="submit"
             value={"SUBMIT"}
             className="w-full border bg-slate-300 rounded-sm h-14 hover:border-black"
-          />
+          /> :
+          <span className="loading loading-ball loading-sm"></span>}
+         </div>
+
         </form>
       </div>
     </div>

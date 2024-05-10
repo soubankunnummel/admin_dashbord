@@ -33,7 +33,7 @@ const NaveBar = () => {
         </label>
       </div>
       <div>
-        <h2 className="text-white text-xl ">{Cookies.get('username') ? Cookies.get('username') : "user name"} </h2>
+        <h2 className="text-white text-xl ">{Cookies.get('username')} </h2>
       </div>
       <div
         onClick={openProfile}
