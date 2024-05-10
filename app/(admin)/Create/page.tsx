@@ -1,57 +1,61 @@
- 'use client'
+"use client";
 import { createEmployee } from "@/app/service/employee";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import {toast} from 'sonner'
-import {useRouter} from 'next/navigation'
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface employee {
-    name: string;
-    email: string;
-    phone:number;
-
+  name: string;
+  email: string;
+  phone: number;
 }
 
 export default function Create() {
-  const Router = useRouter()
-  const [loading,setLoading] = useState(false)
-  const { register,reset, handleSubmit,formState: { errors } } = useForm();
+  const Router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-
-  const onSubmit =  async (data:any) => {
+  const onSubmit = async (data: any) => {
     const formData = new FormData();
-    
+
     formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("phone", data.phone);
     formData.append("desigination", data.desigination);
     formData.append("gender", data.gender);
     formData.append("course", data.coures);
-   
+
     formData.append("image", data.image[0]);
-    await createEmployee(formData)
-    .then((res:any) => {
-
-      console.log(res)
-      if(res?.response?.status === 400){
-        toast.error(res.response.data)
-        setLoading(true)
-        reset()
+    await createEmployee(formData).then((res: any) => {
+      console.log(res);
+      if (res?.response?.status === 400) {
+        toast.error(res.response.data);
+        setLoading(true);
+        reset();
       }
-      if(res.status === 201){
-          Router.push("/EmployeeList")
+      if (res.status === 201) {
+        Router.push("/EmployeeList");
+      }else {
+        setLoading(false)
       }
+    });
 
-    }
-    )
-
-    console.log(data)
- 
-  }
+    console.log(data);
+  };
   return (
     <div className="w-full my-3 bg-white">
       <div className="flex justify-center p-5">
-        <form encType="multipart/form-data" className="bg-white flex flex-col justify-center gap-3 md:p-2 p-5 border shadow-md" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          encType="multipart/form-data"
+          className="bg-white flex flex-col justify-center gap-3 md:p-2 p-5 border shadow-md"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex md:flex-row flex-col justify-center gap-3 md:p-2 p-5">
             <div className="flex flex-col">
               <label htmlFor="name">Name :</label>
@@ -59,21 +63,21 @@ export default function Create() {
                 type="text"
                 id="name"
                 className="outline-none border bg-transparent h-12 rounded-sm px-4"
-                {...register("name",{required:true})}
+                {...register("name", { required: true })}
               />
               <label htmlFor="email">Email :</label>
               <input
                 type="text"
                 id="email"
                 className="outline-none border bg-transparent h-12 rounded-sm px-4"
-                {...register('email', {required:true})}
+                {...register("email", { required: true })}
               />
               <label htmlFor="phone">Mobile No :</label>
               <input
                 type="text"
                 id="phone"
                 className="outline-none border bg-transparent h-12 rounded-sm px-4"
-                {...register("phone",{required:true})}
+                {...register("phone", { required: true })}
               />
               <label htmlFor="designation">Designation :</label>
               <select
@@ -93,7 +97,6 @@ export default function Create() {
                 <input
                   type="radio"
                   id="male"
-                
                   value="Male"
                   {...register("gender")}
                 />
@@ -101,12 +104,10 @@ export default function Create() {
                 <input
                   type="radio"
                   id="female"
-                
                   value="Female"
                   {...register("gender")}
                 />
               </div>
-
 
               <label>Courses :</label>
               <div className="flex justify-evenly my-5">
@@ -114,7 +115,6 @@ export default function Create() {
                 <input
                   type="checkbox"
                   id="mca"
-                  
                   value="MCA"
                   {...register("coures")}
                 />
@@ -122,7 +122,6 @@ export default function Create() {
                 <input
                   type="checkbox"
                   id="bca"
-                  
                   value="BCA"
                   {...register("coures")}
                 />
@@ -130,7 +129,6 @@ export default function Create() {
                 <input
                   type="checkbox"
                   id="bsc"
-                  
                   value="BSC"
                   {...register("coures")}
                 />
@@ -141,19 +139,21 @@ export default function Create() {
                 type="file"
                 id="image"
                 className="outline-none border bg-transparent h-12 rounded-sm p-1"
-                {...register('image', {required:true})}
+                {...register("image", { required: true })}
               />
             </div>
           </div>
-         <div className="flex justify-center items-center ">
-       {!loading ?   <input
-            type="submit"
-            value={"SUBMIT"}
-            className="w-full border bg-slate-300 rounded-sm h-14 hover:border-black"
-          /> :
-          <span className="loading loading-ball loading-sm"></span>}
-         </div>
-
+          <div className="flex justify-center items-center ">
+            {!loading ? (
+              <input
+                type="submit"
+                value={"SUBMIT"}
+                className="w-full border bg-slate-300 rounded-sm h-14 hover:border-black"
+              />
+            ) : (
+              <span className="loading loading-ball loading-sm"></span>
+            )}
+          </div>
         </form>
       </div>
     </div>

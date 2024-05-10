@@ -28,7 +28,7 @@ const Page = () => {
         Cookie.set("token",res.data.token)
         Cookie.set("username", res.data.username)
       }else if(res.response.status === 401) {
-
+        setIstLogin(true)
         toast.error(res.response.data.msg)
       }
       console.log(res)
