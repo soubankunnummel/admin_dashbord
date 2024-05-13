@@ -33,9 +33,14 @@ export const createEmployee = async (data:FormData) => {
 
 //////////////  EDIT EMPLOYEE //////////////
 
-export const editData = async (id:string,data:any, imagetype:string) => {
+export const editData = async (id:any,data:any, imagetype:string) => {
+ 
   try {
-    const res = await Axios.patch(`/employee/${id}?imageType=${imagetype}`,data)
+    const res = await Axios.patch(`/employee/${id}?imageType=${imagetype}`,data,{
+      headers:{
+        'Content-Type':'multipart/form-data'
+    }
+    })
     return res
   } catch (error) {
     return error
@@ -53,5 +58,20 @@ export const DeleteEmployee = async(id:string) => {
   } catch (error) {
     return error
     
+  }
+}
+
+
+
+
+
+///////////// GET BY ID //////////////
+
+export const getById = (id:any) => {
+  try {
+    const res = Axios.get(`/employe/${id}`)
+    return res
+  } catch (error) {
+    return error
   }
 }

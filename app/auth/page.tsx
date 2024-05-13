@@ -17,16 +17,15 @@ const Page = () => {
   const [isLogin, setIstLogin] = useState(true)
   const onSubmit = async (data:userInfo) => {
     setIstLogin(false)
-    console.log(data);
     await Login(data)
     .then((res:any)=>
 
     {
       if(res.status === 200 ){
         alert("login succes")
-        router.push("/")
-        Cookie.set("token",res.data.token)
         Cookie.set("username", res.data.username)
+        Cookie.set("token",res.data.token)
+        router.push("/")
       }else if(res.response.status === 401) {
         setIstLogin(true)
         toast.error(res.response.data.msg)

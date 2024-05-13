@@ -8,25 +8,33 @@ import { useRouter } from "next/navigation";
 
 export default function EmployeeList() {
   const Router = useRouter();
-  const [data, setDta] = useState([]);
+  const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  
   const handleEdit = async (id: string) => {
     Router.push(`/Edit${id}`);
   };
+
   async function getDta() {
     const res = await getEmployees();
-    setDta(res);
+    setData(res);
   }
-  const deleteData = async (id:string) => {
+
+  const deleteData = async (id: string) => {
     await DeleteEmployee(id)
     .then((res) => {
       getDta()
     })
-
   }
+
   useEffect(() => {
     getDta();
   }, []);
-  // console.log(res);
+
+  const filteredData = data.filter((item: any) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       {data?.length === 0 ? (
@@ -42,8 +50,9 @@ export default function EmployeeList() {
             <input
               type="text"
               className="w-[80%] lg:w-[40%] border  outline-none p-3 bg-transparent text-black"
-              placeholder="search by title"
-              // onChange={filterItems}
+              placeholder="Search by name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button className="p-3 bg-gray-700 hover:text-white text-white rounded-lg font-semibold ml-3">
               Search
@@ -58,7 +67,7 @@ export default function EmployeeList() {
             {/* head */}
             <thead>
               <tr>
-                <th>Uniqe Id</th>
+                <th>Unique Id</th>
                 <th>Image</th>
                 <th>Name</th>
                 <th>Email</th>
@@ -71,43 +80,44 @@ export default function EmployeeList() {
               </tr>
             </thead>
             <tbody className="">
-              {/* row 1 */}
-              {data.map((item: any, index: number) => (
-                <>
-                  <tr key={index}>
-                    <th>{index + 1} </th>
-                    <th>
-                      <Image
-                        src={item.image}
-                        alt={`image${item.image} `}
-                        width={300}
-                        height={300}
-                      />{" "}
-                    </th>
-                    <td>{item.name}</td>
-                    <td> {item.email} </td>
-                    <td> {item.phone} </td>
-                    <td> {item.desigination} </td>
-                    <td> {item.gender} </td>
-                    <td> {item.course} </td>
-                    <td>
-                      {new Date(item.createdAt).toLocaleDateString()
-                        ? new Date(item.createdAt).toLocaleDateString()
-                        : "No Date"}
-                    </td>
-                    <td className="flex flex-col gap-2">
-                      <button
-                        className="w-[50px] h-[35px] border rounded-lg bg-blue-600 text-white "
-                        onClick={() => handleEdit(item._id)}
-                      >
-                        Edit
-                      </button>
-                      <button className="w-[50px] h-[35px] border rounded-lg bg-red-600  text-white"onClick={() => deleteData(item._id)}>
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                </>
+              {/* rows */}
+              {filteredData.map((item: any, index: number) => (
+                <tr key={index}>
+                  <th>{index + 1}</th>
+                  <th>
+                    <Image
+                      src={item.image}
+                      alt={`image${item.image} `}
+                      width={300}
+                      height={300}
+                    />
+                  </th>
+                  <td>{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.phone}</td>
+                  <td>{item.desigination}</td>
+                  <td>{item.gender}</td>
+                  <td>{item.course}</td>
+                  <td>
+                    {new Date(item.createdAt).toLocaleDateString()
+                      ? new Date(item.createdAt).toLocaleDateString()
+                      : "No Date"}
+                  </td>
+                  <td className="flex flex-col gap-2">
+                    <button
+                      className="w-[50px] h-[35px] border rounded-lg bg-blue-600 text-white "
+                      onClick={() => handleEdit(item._id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="w-[50px] h-[35px] border rounded-lg bg-red-600  text-white"
+                      onClick={() => deleteData(item._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>

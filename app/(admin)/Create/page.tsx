@@ -1,6 +1,6 @@
 "use client";
 import { createEmployee } from "@/app/service/employee";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -22,6 +22,7 @@ export default function Create() {
   } = useForm();
 
   const onSubmit = async (data: any) => {
+    setLoading(true)
     const formData = new FormData();
 
     formData.append("name", data.name);

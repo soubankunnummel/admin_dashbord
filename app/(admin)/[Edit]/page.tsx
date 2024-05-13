@@ -1,18 +1,59 @@
 'use client'
-import { createEmployee, editData } from "@/app/service/employee";
-import React, { useState } from "react";
+import { createEmployee, editData, getById } from "@/app/service/employee";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {toast} from 'sonner'
-import {useParams} from 'next/navigation'
+import {useParams, useRouter} from 'next/navigation'
+
+interface Employee {
+  name?:string
+  email?: string
+  phone?: string
+  desigination?: string
+  gender:string
+  coures:string
+  image:string
+}
 
 
 export default function Edit() {
   const [loading,setLoading] = useState(false)
-  const parm = useParams()
-  const id = (parm.Edit as string).split('%3A')[1];
-  const { register,reset, handleSubmit,formState: { errors } } = useForm();
+  const {Edit} = useParams()
+  const Router = useRouter()
+  const id = Edit ? (Array.isArray(Edit) ? Edit[0].substring(4) : Edit.substring(4)) : null;
+  const [data, setData] = useState<Employee | null>(null);
+  // const id = (parm.Edit as string).split('%3A')[1];
 
+  const { register,reset, handleSubmit,formState: { errors,isDirty } } = useForm({
+    defaultValues:{
+      name: data?.name,  
+      email: data?.email,
+      phone: data?.phone,
+      desigination: data?.desigination, 
+      gender: data?.gender,  
+      coures: data?.coures,
+      image: data?.image || "",
+    }
+  });
+  
 
+useEffect(() => {
+  const getEmploye = async () => {
+    try {
+      const employee:any = await getById(id);
+      
+      setData(employee?.data)
+      reset(employee); 
+    } catch (error) {
+      console.error("Error fetching employee:", error);
+    }
+  }
+
+  if (id) {
+    getEmploye();
+  }
+
+},[])
 
   const onSubmit = async (data:any) => {
     const imageFile = data.image[0];
@@ -29,8 +70,15 @@ export default function Edit() {
       formData.append("image", imageFile);
     }
     await editData(id,formData,imagetype)
-    .then((res) => console.log(res))
+    .then((res:any) => {
+      if(res?.status === 200){
+        Router.push('/EmployeeList')
+      }
+    
+    })
   }
+
+
 
   return (
     <div className="w-full my-3 bg-white">

@@ -24,6 +24,7 @@ const NaveBar = () => {
     Cookies.remove("username")
     router.replace("/auth");
   };
+  const username = Cookies.get('username')
   return (
     <nav className="h-[70px] bg-blue  flex items-center gap-3 justify-between lg:justify-end px-[3%]">
       <div className="flex lg:hidden">
@@ -33,7 +34,7 @@ const NaveBar = () => {
         </label>
       </div>
       <div>
-        <h2 className="text-white text-xl ">{Cookies.get('username')} </h2>
+        <h2 className="text-white text-xl ">{username ? username : 'user name'} </h2>
       </div>
       <div
         onClick={openProfile}
